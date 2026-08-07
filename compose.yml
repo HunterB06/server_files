@@ -5,20 +5,24 @@ services:
     build:
       context: ./init
     environment:
-        GID: 2000
+        GID: $GID
     volumes:
-      - /tmp/data:/data
+      - ${MEDIA_DRIVE}:/data
     restart: "no"
 
   deluge:
     build:
       context: ./deluge
       args:
-        UID: 1001
-        GID: 2000
+        UID: $DELUGE_UID
+        GID: $GID
         USER: deluge
+    env_file: .env
+    ports:
+      - 8112:8112
     depends_on:
       init:
         condition: service_completed_successfully
     volumes:
-      - /tmp/data:/data
+      - ${MEDIA_DRIVE}:/data
+      - ${DELUGE_CONFIG}:/home/deluge/.config/deluge
