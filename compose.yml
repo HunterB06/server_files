@@ -1,0 +1,24 @@
+name: media-server
+
+services:
+  init:
+    build:
+      context: ./init
+    environment:
+        GID: 2000
+    volumes:
+      - /tmp/data:/data
+    restart: "no"
+
+  deluge:
+    build:
+      context: ./deluge
+      args:
+        UID: 1001
+        GID: 2000
+        USER: deluge
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    volumes:
+      - /tmp/data:/data
