@@ -22,7 +22,7 @@ services:
         USER: deluge
     env_file: .env
     ports:
-      - 8112:8112
+      - 8112
     depends_on:
       init:
         condition: service_completed_successfully
@@ -42,7 +42,7 @@ services:
         USER: sonarr
     env_file: .env
     ports:
-      - 8989:8989
+      - 8989
     depends_on:
       init:
         condition: service_completed_successfully
@@ -62,7 +62,7 @@ services:
         USER: prowlarr
     env_file: .env
     ports:
-      - 9696:9696
+      - 9696
     networks:
       - media-server-network
     volumes:
@@ -78,7 +78,7 @@ services:
         USER: radarr
     env_file: .env
     ports:
-      - 7878:7878
+      - 7878
     depends_on:
       init:
         condition: service_completed_successfully
@@ -112,9 +112,9 @@ services:
         USER: jellyfin
     env_file: .env
     ports:
-      - 8096:8096/tcp
-      - 8920:8920/tcp
-      - 7359:7359/udp
+      - 8096/tcp # HTTP
+      - 8920/tcp # HTTPS
+      - 7359/udp # UDP
     depends_on:
       init:
         condition: service_completed_successfully
@@ -123,4 +123,14 @@ services:
     volumes:
       - ${MEDIA_DRIVE}:/media
       - ${CONFIG}/jellyfin:/config
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - media-server-network
     restart: unless-stopped
