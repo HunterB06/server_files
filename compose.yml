@@ -30,7 +30,8 @@ services:
       - media-server-network
     volumes:
       - ${MEDIA_DRIVE}:/data
-      - ${DELUGE_CONFIG}:/home/deluge/.config/deluge
+      - ${CONFIG}/deluge:/home/deluge/.config/deluge
+    restart: unless-stopped
 
   sonarr:
     build:
@@ -49,7 +50,8 @@ services:
       - media-server-network
     volumes:
       - ${MEDIA_DRIVE}:/data
-      - ${SONARR_CONFIG}:/home/sonarr/.config/sonarr
+      - ${CONFIG}/sonarr:/home/sonarr/.config/sonarr
+    restart: unless-stopped
 
   prowlarr:
     build:
@@ -64,7 +66,8 @@ services:
     networks:
       - media-server-network
     volumes:
-      - ${PROWLARR_CONFIG}:/home/prowlarr/.config/prowlarr
+      - ${CONFIG}/prowlarr:/home/prowlarr/.config/prowlarr
+    restart: unless-stopped
 
   radarr:
     build:
@@ -76,11 +79,15 @@ services:
     env_file: .env
     ports:
       - 7878:7878
+    depends_on:
+      init:
+        condition: service_completed_successfully
     networks:
       - media-server-network
     volumes:
       - ${MEDIA_DRIVE}:/data
-      - ${RADARR_CONFIG}:/home/radarr/.config/radarr
+      - ${CONFIG}/radarr:/home/radarr/.config/radarr
+    restart: unless-stopped
 
   flaresolverr:
     image: flaresolverr/flaresolverr
@@ -92,6 +99,28 @@ services:
       - TZ=Europe/Paris
     ports:
       - 8191
-    restart: unless-stopped
     networks:
       - media-server-network
+    restart: unless-stopped
+
+  jellyfin:
+    build:
+      context: ./jellyfin
+      args:
+        UID: $JELLYFIN_UID
+        GID: $GID
+        USER: jellyfin
+    env_file: .env
+    ports:
+      - 8096:8096/tcp
+      - 8920:8920/tcp
+      - 7359:7359/udp
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    networks:
+      - media-server-network
+    volumes:
+      - ${MEDIA_DRIVE}:/media
+      - ${CONFIG}/jellyfin:/config
+    restart: unless-stopped
