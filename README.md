@@ -12,5 +12,7 @@ JELLYFIN_UID=<id>
 PROWLARR_UID=<id>
 
 MEDIA_DRIVE=<the path you want>
-DELUGE_CONFIG=<the path you want>
+CONFIG=<the path you want>
 ```
+
+Each service's config will be saved under ${CONFIG}/<service name>.
