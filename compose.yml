@@ -1,5 +1,8 @@
 name: media-server
 
+networks:
+  media-server-network:
+
 services:
   init:
     build:
@@ -23,6 +26,27 @@ services:
     depends_on:
       init:
         condition: service_completed_successfully
+    networks:
+      - media-server-network
     volumes:
       - ${MEDIA_DRIVE}:/data
       - ${DELUGE_CONFIG}:/home/deluge/.config/deluge
+
+  sonarr:
+    build:
+      context: ./sonarr
+      args:
+        UID: $SONARR_UID
+        GID: $GID
+        USER: sonarr
+    env_file: .env
+    ports:
+      - 8989:8989
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    networks:
+      - media-server-network
+    volumes:
+      - ${MEDIA_DRIVE}:/data
+      - ${SONARR_CONFIG}:/home/sonarr/.config/sonarr
