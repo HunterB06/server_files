@@ -50,3 +50,48 @@ services:
     volumes:
       - ${MEDIA_DRIVE}:/data
       - ${SONARR_CONFIG}:/home/sonarr/.config/sonarr
+
+  prowlarr:
+    build:
+      context: ./prowlarr
+      args:
+        UID: $PROWLARR_UID
+        GID: $GID
+        USER: prowlarr
+    env_file: .env
+    ports:
+      - 9696:9696
+    networks:
+      - media-server-network
+    volumes:
+      - ${PROWLARR_CONFIG}:/home/prowlarr/.config/prowlarr
+
+  radarr:
+    build:
+      context: ./radarr
+      args:
+        UID: $RADARR_UID
+        GID: $GID
+        USER: radarr
+    env_file: .env
+    ports:
+      - 7878:7878
+    networks:
+      - media-server-network
+    volumes:
+      - ${MEDIA_DRIVE}:/data
+      - ${RADARR_CONFIG}:/home/radarr/.config/radarr
+
+  flaresolverr:
+    image: flaresolverr/flaresolverr
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+      - TZ=Europe/Paris
+    ports:
+      - 8191
+    restart: unless-stopped
+    networks:
+      - media-server-network
