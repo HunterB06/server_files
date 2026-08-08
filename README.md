@@ -15,4 +15,4 @@ MEDIA_DRIVE=<the path you want>
 CONFIG=<the path you want>
 ```
 
-Each service's config will be saved under ${CONFIG}/<service name>.
+Each service's config will be saved under `${CONFIG}/<service name>`.
