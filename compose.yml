@@ -3,6 +3,9 @@ name: media-server
 networks:
   media-server-network:
 
+volumes:
+  certificates:
+
 services:
   init:
     build:
@@ -91,7 +94,6 @@ services:
 
   flaresolverr:
     image: flaresolverr/flaresolverr
-    container_name: flaresolverr
     environment:
       - LOG_LEVEL=info
       - LOG_HTML=false
@@ -131,6 +133,16 @@ services:
     ports:
       - 80:80
       - 443:443
+    env_file: .env
+    volumes:
+      - ./nginx/nginx.conf.template:/etc/nginx/conf.d/nginx.conf.template:ro
+      - certificates:/etc/letsencrypt/live
     networks:
       - media-server-network
+    depends_on:
+      - deluge
+      - jellyfin
+      - sonarr
+      - radarr
+      - prowlarr
     restart: unless-stopped
