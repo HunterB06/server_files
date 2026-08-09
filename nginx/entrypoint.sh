@@ -15,6 +15,7 @@ if [ ! -d "/etc/letsencrypt/live/${DOMAIN}" ]; then
     sleep 2
 
     certbot --nginx --non-interactive --agree-tos --email "$EMAIL" \
+            --cert-name "$DOMAIN" \
             -d "deluge.${DOMAIN}" \
             -d "sonarr.${DOMAIN}" \
             -d "radarr.${DOMAIN}" \

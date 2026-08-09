@@ -5,6 +5,7 @@ networks:
 
 volumes:
   certificates:
+  nginx-conf:
 
 services:
   init:
@@ -135,6 +136,7 @@ services:
       - 443:443
     env_file: .env
     volumes:
+      - nginx-conf:/etc/nginx/conf.d
       - ./nginx/nginx.conf.template:/etc/nginx/conf.d/nginx.conf.template:ro
       - certificates:/etc/letsencrypt/live
     networks:
