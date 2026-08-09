@@ -3,6 +3,6 @@ set -e
 
 umask 002
 
-chown -R ${PROWLARR_UID}:${PROWLARR_UID} /home/prowlarr/.config
+chown -R ${PROWLARR_UID}:${GID} /home/prowlarr/.config
 
-exec gosu prowlarr /opt/Prowlarr/Prowlarr -nobrowser -data=/home/prowlarr/.config/prowlarr
+exec gosu prowlarr:${GID} /opt/Prowlarr/Prowlarr -nobrowser -data=/home/prowlarr/.config/prowlarr

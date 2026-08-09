@@ -2,6 +2,7 @@
 
 umask 002
 
-chown -R ${JELLYFIN_UID}:${JELLYFIN_UID} /config
+chown -R ${JELLYFIN_UID}:$GID /config
+
 echo "======================== RUNNING JELLYFIN ================="
-exec gosu jellyfin /jellyfin/jellyfin
+exec gosu jellyfin:${GID} /jellyfin/jellyfin

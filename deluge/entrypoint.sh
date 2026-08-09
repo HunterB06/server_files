@@ -16,12 +16,12 @@ trap 'stop_services' INT TERM
 
 umask 002
 
-chown -R ${DELUGE_UID}:${DELUGE_UID} /home/deluge/.config
-gosu deluge mkdir -p /data/deluge
-gosu deluge:deluge deluged -d -L info &
+chown -R ${DELUGE_UID}:${GID} /home/deluge/.config
+gosu deluge:${GID} mkdir -p /data/deluge
+gosu deluge:$GID deluged -d -L info &
 DELUGED_PID=$!
 
-gosu deluge:deluge deluge-web -d &
+gosu deluge:$GID deluge-web -d &
 DELUGE_WEB_PID=$!
 
 wait "$DELUGED_PID" "$DELUGE_WEB_PID"
