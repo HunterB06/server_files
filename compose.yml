@@ -3,10 +3,6 @@ name: media-server
 networks:
   media-server-network:
 
-volumes:
-  certificates:
-  nginx-conf:
-
 services:
   init:
     build:
@@ -126,25 +122,4 @@ services:
     volumes:
       - ${MEDIA_DRIVE}:/media
       - ${CONFIG}/jellyfin:/config
-    restart: unless-stopped
-
-  nginx:
-    build:
-      context: ./nginx
-    ports:
-      - 80:80
-      - 443:443
-    env_file: .env
-    volumes:
-      - nginx-conf:/etc/nginx/conf.d
-      - ./nginx/nginx.conf.template:/etc/nginx/conf.d/nginx.conf.template:ro
-      - certificates:/etc/letsencrypt/live
-    networks:
-      - media-server-network
-    depends_on:
-      - deluge
-      - jellyfin
-      - sonarr
-      - radarr
-      - prowlarr
     restart: unless-stopped
